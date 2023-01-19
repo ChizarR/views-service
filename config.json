@@ -1,0 +1,16 @@
+{
+  "is_debug": true,
+  "server": {
+    "bind_ip": "0.0.0.0",
+    "port": "5050"
+  },
+  "mongo_db": {
+    "host": "localhost",
+    "port": "27017",
+    "database": "intaraction-service",
+    "auth_db": "",
+    "user": "",
+    "password": "",
+    "collection": "intaractions"
+  }
+}
