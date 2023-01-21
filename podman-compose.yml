@@ -1,0 +1,29 @@
+version: '3.3'
+
+services:
+  mongo:
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    networks:
+      - mongo
+    ports:
+      - 27017:27017
+    restart: on-failure
+
+  stat_service:
+    build: .
+    networks:
+      - stat-service
+    ports:
+      - 5050:5050
+    restart: on-failure
+    depends_on:
+      - mongo
+
+networks:
+  stat-service:
+    name: videobot
+  mongo:
+    name: videobot
+
