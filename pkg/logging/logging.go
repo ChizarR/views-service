@@ -24,8 +24,8 @@ type logs struct {
 func New() *logs {
 	out := os.Stdout
 
-	warnLogger = log.New(out, " [WARN]:  ", log.Ldate|log.Ltime)
-	infoLogger = log.New(out, " [INFO]:  ", log.Ldate|log.Ltime)
+	warnLogger = log.New(out, "[WARN]:   ", log.Ldate|log.Ltime)
+	infoLogger = log.New(out, "[INFO]:   ", log.Ldate|log.Ltime)
 	errorLogger = log.New(out, "[ERROR]:  ", log.Ldate|log.Ltime)
 	fatalLogger = log.New(out, "[FATAL]:  ", log.Ldate|log.Ltime)
 	traceLogger = log.New(out, "[TRACE]:  ", log.Ldate|log.Ltime)
