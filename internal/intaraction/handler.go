@@ -18,6 +18,7 @@ const (
 	totlaIntaractionsURL          = "/intaraction/total"
 	todayInraractionsURL          = "/intaraction/today"
 	updateCategoryIntaractionsURL = "/intaraction/update"
+	getAllCategoryIntaractionsURL = "/intaraction/all"
 )
 
 type handler struct {
@@ -33,6 +34,7 @@ func (h *handler) Register(router *http.ServeMux) {
 	router.HandleFunc(totlaIntaractionsURL, apperror.Middleware(h.GetTotalIntaractions))
 	router.HandleFunc(todayInraractionsURL, apperror.Middleware(h.GetTodayIntaractions))
 	router.HandleFunc(updateCategoryIntaractionsURL, apperror.Middleware(h.UpdateIntaractions))
+	router.HandleFunc(getAllCategoryIntaractionsURL, apperror.Middleware(h.GetAllCategoryIntaractons))
 }
 
 func (h *handler) GetTotalIntaractions(w http.ResponseWriter, r *http.Request) error {
@@ -97,4 +99,24 @@ func (h *handler) UpdateIntaractions(w http.ResponseWriter, r *http.Request) err
 		w.Write([]byte("Only POST available"))
 	}
 	return nil
+}
+
+func (h *handler) GetAllCategoryIntaractons(w http.ResponseWriter, r *http.Request) error {
+	switch r.Method {
+	case http.MethodGet:
+		allIntaractions, err := h.service.GetAllIntaractions(context.Background())
+		if err != nil {
+			return err
+		}
+
+		resp := rest.NewResponse(true, "All intaractions", allIntaractions)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(resp.Marshal())
+		return nil
+	default:
+		w.Write([]byte("Only GET available"))
+		return nil
+	}
 }

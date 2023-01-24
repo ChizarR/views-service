@@ -10,7 +10,8 @@ import (
 type IntaractionService interface {
 	AddNewIntaractions(ctx context.Context, intrDTO IntaractionDTO) error
 	GetTodayIntaractions(ctx context.Context) (IntaractionDTO, error)
-	GetAllIntaractions(ctx context.Context) (IntaractionDTO, error)
+	GetTotalIntaractions(ctx context.Context) (IntaractionDTO, error)
+	GetAllIntaractions(ctx context.Context) ([]Intaraction, error)
 }
 
 type service struct {
@@ -56,7 +57,7 @@ func (s *service) GetTodayIntaractions(ctx context.Context) (IntaractionDTO, err
 	return intrDTO, nil
 }
 
-func (s *service) GetAllIntaractions(ctx context.Context) (IntaractionDTO, error) {
+func (s *service) GetTotalIntaractions(ctx context.Context) (IntaractionDTO, error) {
 	allIntrs, err := s.storage.FindAll(ctx)
 	if err != nil {
 		return IntaractionDTO{}, err
@@ -74,6 +75,14 @@ func (s *service) GetAllIntaractions(ctx context.Context) (IntaractionDTO, error
 		}
 	}
 	return result, nil
+}
+
+func (s *service) GetAllIntaractions(ctx context.Context) ([]Intaraction, error) {
+	allIntrs, err := s.storage.FindAll(ctx)
+	if err != nil {
+		return []Intaraction{}, err
+	}
+	return allIntrs, nil
 }
 
 func getTodayDate() string {
