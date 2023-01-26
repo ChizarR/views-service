@@ -9,7 +9,9 @@ import (
 
 	"github.com/ChizarR/stats-service/internal/config"
 	"github.com/ChizarR/stats-service/internal/intaraction"
-	"github.com/ChizarR/stats-service/internal/intaraction/db"
+	intrdb "github.com/ChizarR/stats-service/internal/intaraction/db"
+	"github.com/ChizarR/stats-service/internal/user"
+	userdb "github.com/ChizarR/stats-service/internal/user/db"
 	"github.com/ChizarR/stats-service/pkg/client/mongodb"
 	"github.com/ChizarR/stats-service/pkg/logging"
 )
@@ -23,21 +25,30 @@ func main() {
 	cfg := config.GetConfig()
 	cfgMongoDB := cfg.MongoDB
 
-	logger.Info("CREATE Mongo Client...")
+	logger.Info("CREATE Mongo Client")
 	client, err := mongodb.NewClient(context.Background(), cfgMongoDB.Host, cfgMongoDB.Port,
 		cfgMongoDB.User, cfgMongoDB.Password, cfgMongoDB.Database, cfgMongoDB.AuthDB)
 	if err != nil {
 		panic(err)
 	}
 
-	logger.Info("CREATE storage...")
-	storage := db.NewStorage(client, cfgMongoDB.Collection, logger)
+	logger.Info("CREATE intaraction storage")
+	intrStorage := intrdb.NewStorage(client, cfgMongoDB.Collections.Intaraction, logger)
 
-	intrService := intaraction.NewIntaractionService(storage, logger)
+	intrService := intaraction.NewIntaractionService(intrStorage, logger)
 
 	logger.Info("REGISTER intaraction handler")
-	intaraction_handler := intaraction.NewHandler(intrService, logger)
-	intaraction_handler.Register(mux)
+	intaractionHandler := intaraction.NewHandler(intrService, logger)
+	intaractionHandler.Register(mux)
+
+	logger.Info("CREATE user storage")
+	userStorage := userdb.NewStorage(client, cfgMongoDB.Collections.User, logger)
+
+	userService := user.NewUserStatService(userStorage, logger)
+
+	logger.Info("REGISTER user handler")
+	userHandler := user.NewHandler(userService, logger)
+	userHandler.Register(mux)
 
 	run(mux, cfg)
 }

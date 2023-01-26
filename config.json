@@ -11,6 +11,9 @@
     "auth_db": "",
     "user": "",
     "password": "",
-    "collection": "intaractions"
+    "collections": {
+      "intaraction": "intaractions",
+      "user": "users"
+    }
   }
 }

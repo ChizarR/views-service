@@ -15,13 +15,16 @@ type Config struct {
 		Port   string `json:"port"`
 	} `json:"server"`
 	MongoDB struct {
-		Host       string `json:"host"`
-		Port       string `json:"port"`
-		Database   string `json:"database"`
-		AuthDB     string `json:"auth_db"`
-		User       string `json:"user"`
-		Password   string `json:"password"`
-		Collection string `json:"collection"`
+		Host        string `json:"host"`
+		Port        string `json:"port"`
+		Database    string `json:"database"`
+		AuthDB      string `json:"auth_db"`
+		User        string `json:"user"`
+		Password    string `json:"password"`
+		Collections struct {
+			Intaraction string `json:"intaraction"`
+			User        string `json:"user"`
+		} `json:"collections"`
 	} `json:"mongo_db"`
 }
 
